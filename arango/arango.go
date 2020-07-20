@@ -85,5 +85,9 @@ func initCollection(db driver.Database, collection string) (driver.Collection, e
 }
 
 func (d *dbDriver) Query(query string) (interface{}, error) {
-	return nil, nil
+	cursor, err := d.db.Query(nil, query, nil)
+	if err != nil {
+		return nil, err
+	}
+	return iterateCursor(cursor)
 }
