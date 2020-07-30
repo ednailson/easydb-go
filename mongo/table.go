@@ -1,15 +1,13 @@
-package arango
+package mongo
 
 import (
-	"github.com/arangodb/go-driver"
 	"github.com/ednailson/easydb-go"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type table struct {
-	db       driver.Database
-	table    string
-	coll     driver.Collection
-	dbDriver *dbDriver
+	coll   *mongo.Collection
+	driver *driver
 }
 
 func (t *table) Writer() easydb.IWriter {
@@ -21,5 +19,5 @@ func (t *table) Reader() easydb.IReader {
 }
 
 func (t *table) Errors() easydb.IErrors {
-	return t.dbDriver
+	return t.driver
 }

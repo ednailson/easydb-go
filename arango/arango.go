@@ -67,9 +67,10 @@ func (d *dbDriver) Table(tableName string) (easydb.ITable, error) {
 		}
 	}
 	return &table{
-		db:    d.db,
-		table: tableName,
-		coll:  coll,
+		db:       d.db,
+		table:    tableName,
+		coll:     coll,
+		dbDriver: d,
 	}, nil
 }
 
@@ -90,4 +91,16 @@ func (d *dbDriver) Query(query string) (interface{}, error) {
 		return nil, err
 	}
 	return iterateCursor(cursor)
+}
+
+func (d *dbDriver) Errors() easydb.IErrors {
+	return d
+}
+
+func (d *dbDriver) IsConflict(err error) bool {
+	return driver.IsConflict(err)
+}
+
+func (d *dbDriver) IsNotFound(err error) bool {
+	return driver.IsNotFound(err)
 }
