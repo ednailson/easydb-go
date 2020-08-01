@@ -38,3 +38,10 @@ func (t *table) ReadAll() ([]interface{}, error) {
 func (t *table) Filter(filters []easydb.Filter) ([]interface{}, error) {
 	return nil, nil
 }
+
+//func buildFilter(filters []easydb.Filter) bson.M {
+//	filter := bson.M{}
+//	for _, value := range filters {
+//		filter[value.Key]
+//	}
+//}

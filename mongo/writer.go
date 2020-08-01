@@ -1,8 +1,11 @@
 package mongo
 
 import (
+	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"strings"
 )
 
 func (t *table) Save(data interface{}) (interface{}, error) {
@@ -10,7 +13,7 @@ func (t *table) Save(data interface{}) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	return result.InsertedID, nil
+	return strings.ReplaceAll(strings.Split(fmt.Sprintf("%v", result.InsertedID), `"`)[1], `"`, ""), nil
 }
 
 func (t *table) Update(id string, data interface{}) (interface{}, error) {
@@ -30,5 +33,6 @@ func (t *table) Delete(id string) error {
 }
 
 func filterId(id string) bson.M {
-	return bson.M{"_id": id}
+	objectId, _ := primitive.ObjectIDFromHex(id)
+	return bson.M{"_id": objectId}
 }

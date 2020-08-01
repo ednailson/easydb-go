@@ -13,11 +13,16 @@ type driver struct {
 }
 
 func NewDatabase(config Config) (easydb.IDatabase, error) {
-	client, err := mongo.Connect(nil, options.Client().ApplyURI(fmt.Sprintf("mongodb://%s:%d", config.Host, config.Port)))
+	client, err := mongo.Connect(nil, options.Client().
+		ApplyURI(fmt.Sprintf("mongodb://%s:%d", config.Host, config.Port)).
+		SetAuth(options.Credential{
+			Username: config.Username,
+			Password: config.Password,
+		}),
+	)
 	if err != nil {
 		return nil, err
 	}
-
 	return &driver{client: client, db: client.Database(config.Database)}, nil
 }
 

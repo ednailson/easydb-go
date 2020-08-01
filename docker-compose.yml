@@ -1,0 +1,30 @@
+version: "3.2"
+
+services:
+#  arango:
+#    image: arangodb:3.6
+#    ports:
+#      - "8529:8529"
+#    environment:
+#      ARANGO_ROOT_PASSWORD: "dummyPass"
+#      ARANGO_STORAGE_ENGINE: rocksdb
+#    networks:
+#      back:
+#        aliases:
+#          - "arangodb.service.com.br"
+
+  mongo:
+    image: mongo:4.2.8
+    ports:
+      - "27017-27019:27017-27019"
+    environment:
+      MONGO_INITDB_ROOT_DATABASE: "root_test"
+      MONGO_INITDB_ROOT_USERNAME: "root"
+      MONGO_INITDB_ROOT_PASSWORD: "dummyPass"
+    networks:
+      back:
+        aliases:
+          - "mongodb.service.com.br"
+
+networks:
+  back:
