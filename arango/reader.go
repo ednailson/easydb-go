@@ -25,12 +25,12 @@ func (t *table) ReadAll() ([]interface{}, error) {
 	return iterateCursor(cursor)
 }
 
-func (t *table) Filter(filters []easydb.Filter) ([]interface{}, error) {
+func (t *table) Filter(filters easydb.Filters) ([]interface{}, error) {
 	query := `FOR u IN @@collection`
 	var bindVars = make(map[string]interface{})
 	bindVars["@collection"] = t.table
 	var i = 0
-	for _, value := range filters {
+	for _, value := range filters.Filters {
 		v := value.Key
 		if bindVars[value.Key] != nil {
 			v = value.Key + strconv.Itoa(i)

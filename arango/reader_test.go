@@ -76,7 +76,7 @@ func ReadAllEmpty(reader easydb.IReader) {
 }
 
 func ReadFilters(coll driver.Collection, reader easydb.IReader) {
-	data, err := reader.Filter(nil)
+	data, err := reader.Filter(easydb.Filters{})
 	Expect(data).To(BeNil())
 	Expect(err).To(HaveOccurred())
 	Expect(reader.Errors().IsNotFound(err)).To(BeTrue())
@@ -86,13 +86,8 @@ func ReadFilters(coll driver.Collection, reader easydb.IReader) {
 	documentData, err = coll.CreateDocument(nil, getUserMock2())
 	Expect(err).ToNot(HaveOccurred())
 	defer removeDocument(coll, documentData.Key)
-	data, err = reader.Filter([]easydb.Filter{
-		{
-			Key:      "email",
-			Value:    "email@email.com",
-			Operator: Equals,
-		},
-	})
+	filters := easydb.NewFilters().AddFilter("email", "email@email.com", Equals).Done()
+	data, err = reader.Filter(filters)
 	Expect(err).ToNot(HaveOccurred())
 	Expect(len(data)).To(BeEquivalentTo(1))
 	assertUsers(getUserFromRead(data[0]), getUserMock())

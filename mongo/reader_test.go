@@ -13,6 +13,7 @@ import (
 func TestReader(t *testing.T) {
 	RegisterTestingT(t)
 	id, reader := initReaderTest()
+	defer removeDocument(id)
 	t.Run("read an existent document", func(t *testing.T) {
 		read, err := reader.Read(id)
 		Expect(err).ToNot(HaveOccurred())
@@ -33,6 +34,17 @@ func TestReader(t *testing.T) {
 		decode(read, &data)
 		Expect(len(data)).To(BeEquivalentTo(1))
 		Expect(data[0]).To(BeEquivalentTo(mockData()))
+	})
+	t.Run("filter existent documents", func(t *testing.T) {
+		read, err := reader.Filter(easydb.NewFilters().AddFilter("name", mockData().Name, Equals).Done())
+		Expect(err).ToNot(HaveOccurred())
+		var data []Data
+		decode(read, &data)
+		Expect(len(data)).To(BeEquivalentTo(1))
+		Expect(data[0]).To(BeEquivalentTo(mockData()))
+		read, err = reader.Filter(easydb.NewFilters().AddFilter("name", mockData2().Name, Equals).Done())
+		Expect(err).ToNot(HaveOccurred())
+		Expect(len(read)).To(BeEquivalentTo(0))
 	})
 }
 

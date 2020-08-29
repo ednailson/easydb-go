@@ -21,7 +21,7 @@ type IWriter interface {
 type IReader interface {
 	Read(id string) (interface{}, error)
 	ReadAll() ([]interface{}, error)
-	Filter(filters []Filter) ([]interface{}, error)
+	Filter(filters Filters) ([]interface{}, error)
 	Errors() IErrors
 }
 
