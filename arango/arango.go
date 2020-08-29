@@ -14,7 +14,7 @@ type dbDriver struct {
 	indexFields map[string][]string
 }
 
-func NewDatabase(config Config) (easydb.IDatabase, error) {
+func NewDatabase(config Config) (easydb.Database, error) {
 	dbConn, err := http.NewConnection(http.ConnectionConfig{
 		Endpoints: []string{config.Host + ":" + strconv.Itoa(config.Port)},
 		TLSConfig: &tls.Config{},
@@ -54,7 +54,7 @@ func NewDatabase(config Config) (easydb.IDatabase, error) {
 	}, nil
 }
 
-func (d *dbDriver) Table(tableName string) (easydb.ITable, error) {
+func (d *dbDriver) Table(tableName string) (easydb.Table, error) {
 	coll, err := initCollection(d.db, tableName)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to init collection")
@@ -93,7 +93,7 @@ func (d *dbDriver) Query(query string) (interface{}, error) {
 	return iterateCursor(cursor)
 }
 
-func (d *dbDriver) Errors() easydb.IErrors {
+func (d *dbDriver) Errors() easydb.Errors {
 	return d
 }
 

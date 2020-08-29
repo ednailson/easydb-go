@@ -37,7 +37,7 @@ func TestReader(t *testing.T) {
 	})
 }
 
-func ReadADocument(coll driver.Collection, reader easydb.IReader) {
+func ReadADocument(coll driver.Collection, reader easydb.Reader) {
 	documentData, err := coll.CreateDocument(nil, getUserMock())
 	Expect(err).ToNot(HaveOccurred())
 	defer removeDocument(coll, documentData.Key)
@@ -48,13 +48,13 @@ func ReadADocument(coll driver.Collection, reader easydb.IReader) {
 	assertUsers(userReceived, getUserMock())
 }
 
-func ReadANonexistentDocument(reader easydb.IReader) {
+func ReadANonexistentDocument(reader easydb.Reader) {
 	data, err := reader.Read("wrong key")
 	Expect(err).To(HaveOccurred())
 	Expect(data).To(BeNil())
 }
 
-func ReadAllDocuments(coll driver.Collection, reader easydb.IReader) {
+func ReadAllDocuments(coll driver.Collection, reader easydb.Reader) {
 	documentData, err := coll.CreateDocument(nil, getUserMock())
 	Expect(err).ToNot(HaveOccurred())
 	defer removeDocument(coll, documentData.Key)
@@ -68,15 +68,15 @@ func ReadAllDocuments(coll driver.Collection, reader easydb.IReader) {
 	assertUsers(getUserFromRead(data[1]), getUserMock2())
 }
 
-func ReadAllEmpty(reader easydb.IReader) {
+func ReadAllEmpty(reader easydb.Reader) {
 	data, err := reader.ReadAll()
 	Expect(err).To(HaveOccurred())
 	Expect(data).To(BeNil())
 	Expect(reader.Errors().IsNotFound(err)).To(BeTrue())
 }
 
-func ReadFilters(coll driver.Collection, reader easydb.IReader) {
-	data, err := reader.Filter(easydb.Filters{})
+func ReadFilters(coll driver.Collection, reader easydb.Reader) {
+	data, err := reader.Filter(nil)
 	Expect(data).To(BeNil())
 	Expect(err).To(HaveOccurred())
 	Expect(reader.Errors().IsNotFound(err)).To(BeTrue())

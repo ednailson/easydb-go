@@ -83,7 +83,7 @@ func removeDocument(id string) {
 	Expect(err).ToNot(HaveOccurred())
 }
 
-func insertDocumentWithWriter(writer easydb.IWriter) string {
+func insertDocumentWithWriter(writer easydb.Writer) string {
 	insertedId, err := writer.Save(mockData())
 	Expect(err).ToNot(HaveOccurred())
 	Expect(insertedId).ToNot(BeEquivalentTo(""))

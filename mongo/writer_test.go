@@ -44,7 +44,7 @@ func TestWriter(t *testing.T) {
 	})
 }
 
-func initWriterTest() easydb.IWriter {
+func initWriterTest() easydb.Writer {
 	db, err := NewDatabase(MockConfig())
 	Expect(err).ToNot(HaveOccurred())
 	table, err := db.Table(testCollName)

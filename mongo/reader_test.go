@@ -48,7 +48,7 @@ func TestReader(t *testing.T) {
 	})
 }
 
-func initReaderTest() (string, easydb.IReader) {
+func initReaderTest() (string, easydb.Reader) {
 	db, err := NewDatabase(MockConfig())
 	Expect(err).ToNot(HaveOccurred())
 	table, err := db.Table(testCollName)

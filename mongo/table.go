@@ -10,14 +10,14 @@ type table struct {
 	driver *driver
 }
 
-func (t *table) Writer() easydb.IWriter {
+func (t *table) Writer() easydb.Writer {
 	return t
 }
 
-func (t *table) Reader() easydb.IReader {
+func (t *table) Reader() easydb.Reader {
 	return t
 }
 
-func (t *table) Errors() easydb.IErrors {
+func (t *table) Errors() easydb.Errors {
 	return t.driver
 }

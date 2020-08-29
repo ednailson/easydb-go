@@ -18,8 +18,8 @@ func (t *table) ReadAll() ([]interface{}, error) {
 	return t.find(bson.D{})
 }
 
-func (t *table) Filter(filters easydb.Filters) ([]interface{}, error) {
-	return t.find(buildFilter(filters.Filters))
+func (t *table) Filter(filters []easydb.Filter) ([]interface{}, error) {
+	return t.find(buildFilter(filters))
 }
 
 func (t *table) find(filter interface{}) ([]interface{}, error) {

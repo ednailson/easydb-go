@@ -61,7 +61,7 @@ func mockClient(config Config) driver.Client {
 	return client
 }
 
-func mockTestingDB() easydb.IDatabase {
+func mockTestingDB() easydb.Database {
 	db, err := NewDatabase(Config{
 		Host:     dbHostTest,
 		Port:     dbPortTest,
@@ -79,7 +79,7 @@ func mockTestingDB() easydb.IDatabase {
 	return db
 }
 
-func mockUserTable() easydb.ITable {
+func mockUserTable() easydb.Table {
 	db := mockTestingDB()
 	table, err := db.Table(collUserTest)
 	Expect(err).ToNot(HaveOccurred())

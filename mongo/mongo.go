@@ -12,7 +12,7 @@ type driver struct {
 	db     *mongo.Database
 }
 
-func NewDatabase(config Config) (easydb.IDatabase, error) {
+func NewDatabase(config Config) (easydb.Database, error) {
 	client, err := mongo.Connect(nil, options.Client().
 		ApplyURI(fmt.Sprintf("mongodb://%s:%d", config.Host, config.Port)).
 		SetAuth(options.Credential{
@@ -26,7 +26,7 @@ func NewDatabase(config Config) (easydb.IDatabase, error) {
 	return &driver{client: client, db: client.Database(config.Database)}, nil
 }
 
-func (d *driver) Table(tableName string) (easydb.ITable, error) {
+func (d *driver) Table(tableName string) (easydb.Table, error) {
 	return &table{coll: d.db.Collection(tableName), driver: d}, nil
 }
 
@@ -34,7 +34,7 @@ func (d *driver) Query(query string) (interface{}, error) {
 	return nil, nil
 }
 
-func (d *driver) Errors() easydb.IErrors {
+func (d *driver) Errors() easydb.Errors {
 	return d
 }
 

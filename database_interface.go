@@ -1,31 +1,31 @@
 package easydb
 
-type IDatabase interface {
-	Table(table string) (ITable, error)
+type Database interface {
+	Table(table string) (Table, error)
 	Query(query string) (interface{}, error)
-	Errors() IErrors
+	Errors() Errors
 }
 
-type ITable interface {
-	Writer() IWriter
-	Reader() IReader
+type Table interface {
+	Writer() Writer
+	Reader() Reader
 }
 
-type IWriter interface {
+type Writer interface {
 	Save(data interface{}) (interface{}, error)
 	Update(id string, data interface{}) (interface{}, error)
 	Delete(id string) error
-	Errors() IErrors
+	Errors() Errors
 }
 
-type IReader interface {
+type Reader interface {
 	Read(id string) (interface{}, error)
 	ReadAll() ([]interface{}, error)
-	Filter(filters Filters) ([]interface{}, error)
-	Errors() IErrors
+	Filter(filters []Filter) ([]interface{}, error)
+	Errors() Errors
 }
 
-type IErrors interface {
+type Errors interface {
 	IsConflict(err error) bool
 	IsNotFound(err error) bool
 }

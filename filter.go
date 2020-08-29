@@ -25,6 +25,6 @@ func (f *Filters) AddFilter(key string, value interface{}, operator string) *Fil
 	return f
 }
 
-func (f *Filters) Done() Filters {
-	return *f
+func (f *Filters) Done() []Filter {
+	return f.Filters
 }
