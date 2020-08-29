@@ -1,7 +1,6 @@
 package mongo
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/ednailson/easydb-go"
 	. "github.com/onsi/gomega"
@@ -19,7 +18,7 @@ func TestReader(t *testing.T) {
 		Expect(err).ToNot(HaveOccurred())
 		var data Data
 		decode(read, &data)
-		Expect(data).To(BeEquivalentTo(MockData()))
+		Expect(data).To(BeEquivalentTo(mockData()))
 	})
 	t.Run("read a nonexistent document", func(t *testing.T) {
 		read, err := reader.Read("id")
@@ -33,15 +32,8 @@ func TestReader(t *testing.T) {
 		var data []Data
 		decode(read, &data)
 		Expect(len(data)).To(BeEquivalentTo(1))
-		Expect(data[0]).To(BeEquivalentTo(MockData()))
+		Expect(data[0]).To(BeEquivalentTo(mockData()))
 	})
-}
-
-func decode(read, data interface{}) {
-	body, err := json.Marshal(read)
-	Expect(err).ToNot(HaveOccurred())
-	err = json.Unmarshal(body, &data)
-	Expect(err).ToNot(HaveOccurred())
 }
 
 func initReaderTest() (string, easydb.IReader) {
@@ -49,10 +41,10 @@ func initReaderTest() (string, easydb.IReader) {
 	Expect(err).ToNot(HaveOccurred())
 	table, err := db.Table(testCollName)
 	Expect(err).ToNot(HaveOccurred())
-	coll := MockColl()
+	coll := mockColl()
 	_, err = coll.DeleteMany(nil, bson.D{})
 	Expect(err).ToNot(HaveOccurred())
-	resultInsert, err := coll.InsertOne(nil, MockData())
+	resultInsert, err := coll.InsertOne(nil, mockData())
 	Expect(err).ToNot(HaveOccurred())
 	return strings.ReplaceAll(strings.Split(fmt.Sprintf("%v", resultInsert.InsertedID), `"`)[1], `"`, ""), table.Reader()
 }

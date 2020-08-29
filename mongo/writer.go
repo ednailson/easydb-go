@@ -17,14 +17,14 @@ func (t *table) Save(data interface{}) (interface{}, error) {
 }
 
 func (t *table) Update(id string, data interface{}) (interface{}, error) {
-	updated, err := t.coll.UpdateOne(nil, filterId(id), data)
+	updated, err := t.coll.UpdateOne(nil, filterId(id), bson.M{"$set": data})
 	if err != nil {
 		return nil, err
 	}
 	if updated.MatchedCount == 0 {
 		return nil, mongo.ErrNoDocuments
 	}
-	return updated.UpsertedID, nil
+	return id, nil
 }
 
 func (t *table) Delete(id string) error {

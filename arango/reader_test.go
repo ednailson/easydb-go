@@ -10,11 +10,11 @@ import (
 
 func TestReader(t *testing.T) {
 	RegisterTestingT(t)
-	db, err := NewDatabase(MockDBConfig())
+	db, err := NewDatabase(mockDBConfig())
 	Expect(err).ToNot(HaveOccurred())
-	table, err := db.Table(MockDBConfig().Collections[0].Name)
+	table, err := db.Table(mockDBConfig().Collections[0].Name)
 	Expect(err).ToNot(HaveOccurred())
-	coll := MockCollection(MockDBConfig())
+	coll := mockCollection(mockDBConfig())
 	t.Run("Test read a document", func(t *testing.T) {
 		RegisterTestingT(t)
 		ReadADocument(coll, table.Reader())
@@ -40,7 +40,7 @@ func TestReader(t *testing.T) {
 func ReadADocument(coll driver.Collection, reader easydb.IReader) {
 	documentData, err := coll.CreateDocument(nil, getUserMock())
 	Expect(err).ToNot(HaveOccurred())
-	defer RemoveDocument(coll, documentData.Key)
+	defer removeDocument(coll, documentData.Key)
 	data, err := reader.Read(documentData.Key)
 	Expect(err).ToNot(HaveOccurred())
 	userReceived := getUserFromRead(data)
@@ -57,10 +57,10 @@ func ReadANonexistentDocument(reader easydb.IReader) {
 func ReadAllDocuments(coll driver.Collection, reader easydb.IReader) {
 	documentData, err := coll.CreateDocument(nil, getUserMock())
 	Expect(err).ToNot(HaveOccurred())
-	defer RemoveDocument(coll, documentData.Key)
+	defer removeDocument(coll, documentData.Key)
 	documentData, err = coll.CreateDocument(nil, getUserMock2())
 	Expect(err).ToNot(HaveOccurred())
-	defer RemoveDocument(coll, documentData.Key)
+	defer removeDocument(coll, documentData.Key)
 	data, err := reader.ReadAll()
 	Expect(err).ToNot(HaveOccurred())
 	Expect(len(data)).To(BeEquivalentTo(2))
@@ -82,10 +82,10 @@ func ReadFilters(coll driver.Collection, reader easydb.IReader) {
 	Expect(reader.Errors().IsNotFound(err)).To(BeTrue())
 	documentData, err := coll.CreateDocument(nil, getUserMock())
 	Expect(err).ToNot(HaveOccurred())
-	defer RemoveDocument(coll, documentData.Key)
+	defer removeDocument(coll, documentData.Key)
 	documentData, err = coll.CreateDocument(nil, getUserMock2())
 	Expect(err).ToNot(HaveOccurred())
-	defer RemoveDocument(coll, documentData.Key)
+	defer removeDocument(coll, documentData.Key)
 	data, err = reader.Filter([]easydb.Filter{
 		{
 			Key:      "email",

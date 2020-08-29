@@ -9,11 +9,11 @@ import (
 
 func TestWriter(t *testing.T) {
 	RegisterTestingT(t)
-	db, err := NewDatabase(MockDBConfig())
+	db, err := NewDatabase(mockDBConfig())
 	Expect(err).ToNot(HaveOccurred())
-	table, err := db.Table(MockDBConfig().Collections[0].Name)
+	table, err := db.Table(mockDBConfig().Collections[0].Name)
 	Expect(err).ToNot(HaveOccurred())
-	coll := MockCollection(MockDBConfig())
+	coll := mockCollection(mockDBConfig())
 	t.Run("create a document", func(t *testing.T) {
 		RegisterTestingT(t)
 		CreateADocument(coll, table.Writer())
@@ -40,7 +40,7 @@ func CreateADocument(coll driver.Collection, writer easydb.IWriter) {
 	key, err := writer.Save(getUserMock())
 	Expect(err).ToNot(HaveOccurred())
 	Expect(key).ToNot(BeEquivalentTo(""))
-	defer RemoveDocument(coll, key.(string))
+	defer removeDocument(coll, key.(string))
 	var u user
 	_, err = coll.ReadDocument(nil, key.(string), &u)
 	Expect(err).ToNot(HaveOccurred())
@@ -50,7 +50,7 @@ func CreateADocument(coll driver.Collection, writer easydb.IWriter) {
 func UpdateADocument(coll driver.Collection, writer easydb.IWriter) {
 	document, err := coll.CreateDocument(nil, getUserMock())
 	Expect(err).ToNot(HaveOccurred())
-	defer RemoveDocument(coll, document.Key)
+	defer removeDocument(coll, document.Key)
 	key, err := writer.Update(document.Key, getUserMock2())
 	Expect(err).ToNot(HaveOccurred())
 	Expect(key).To(BeEquivalentTo(document.Key))

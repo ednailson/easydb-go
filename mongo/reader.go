@@ -11,11 +11,19 @@ func (t *table) Read(id string) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	return result, err
+	return result, nil
 }
 
 func (t *table) ReadAll() ([]interface{}, error) {
-	cur, err := t.coll.Find(nil, bson.D{})
+	return t.find(bson.D{})
+}
+
+func (t *table) Filter(filters []easydb.Filter) ([]interface{}, error) {
+	return t.find(buildFilter(filters))
+}
+
+func (t *table) find(filter interface{}) ([]interface{}, error) {
+	cur, err := t.coll.Find(nil, filter)
 	if err != nil {
 		return nil, err
 	}
@@ -35,13 +43,12 @@ func (t *table) ReadAll() ([]interface{}, error) {
 	return results, nil
 }
 
-func (t *table) Filter(filters []easydb.Filter) ([]interface{}, error) {
-	return nil, nil
+func buildFilter(filters []easydb.Filter) bson.M {
+	filter := bson.M{}
+	for _, value := range filters {
+		filter[value.Key] = bson.M{
+			value.Operator: value.Value,
+		}
+	}
+	return filter
 }
-
-//func buildFilter(filters []easydb.Filter) bson.M {
-//	filter := bson.M{}
-//	for _, value := range filters {
-//		filter[value.Key]
-//	}
-//}

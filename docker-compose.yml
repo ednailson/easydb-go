@@ -1,17 +1,17 @@
 version: "3.2"
 
 services:
-#  arango:
-#    image: arangodb:3.6
-#    ports:
-#      - "8529:8529"
-#    environment:
-#      ARANGO_ROOT_PASSWORD: "dummyPass"
-#      ARANGO_STORAGE_ENGINE: rocksdb
-#    networks:
-#      back:
-#        aliases:
-#          - "arangodb.service.com.br"
+  arango:
+    image: arangodb:3.6
+    ports:
+      - "8529:8529"
+    environment:
+      ARANGO_ROOT_PASSWORD: "dummyPass"
+      ARANGO_STORAGE_ENGINE: rocksdb
+    networks:
+      back:
+        aliases:
+          - "arangodb.service.com.br"
 
   mongo:
     image: mongo:4.2.8
