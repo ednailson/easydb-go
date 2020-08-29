@@ -9,11 +9,11 @@ import (
 
 func TestWriter(t *testing.T) {
 	RegisterTestingT(t)
-	db, err := NewDatabase(MockDBConfig())
+	db, err := NewDatabase(mockDBConfig())
 	Expect(err).ToNot(HaveOccurred())
-	table, err := db.Table(MockDBConfig().Collections[0].Name)
+	table, err := db.Table(mockDBConfig().Collections[0].Name)
 	Expect(err).ToNot(HaveOccurred())
-	coll := MockCollection(MockDBConfig())
+	coll := mockCollection(mockDBConfig())
 	t.Run("create a document", func(t *testing.T) {
 		RegisterTestingT(t)
 		CreateADocument(coll, table.Writer())
@@ -36,21 +36,21 @@ func TestWriter(t *testing.T) {
 	})
 }
 
-func CreateADocument(coll driver.Collection, writer easydb.IWriter) {
+func CreateADocument(coll driver.Collection, writer easydb.Writer) {
 	key, err := writer.Save(getUserMock())
 	Expect(err).ToNot(HaveOccurred())
 	Expect(key).ToNot(BeEquivalentTo(""))
-	defer RemoveDocument(coll, key.(string))
+	defer removeDocument(coll, key.(string))
 	var u user
 	_, err = coll.ReadDocument(nil, key.(string), &u)
 	Expect(err).ToNot(HaveOccurred())
 	assertUsers(getUserMock(), u)
 }
 
-func UpdateADocument(coll driver.Collection, writer easydb.IWriter) {
+func UpdateADocument(coll driver.Collection, writer easydb.Writer) {
 	document, err := coll.CreateDocument(nil, getUserMock())
 	Expect(err).ToNot(HaveOccurred())
-	defer RemoveDocument(coll, document.Key)
+	defer removeDocument(coll, document.Key)
 	key, err := writer.Update(document.Key, getUserMock2())
 	Expect(err).ToNot(HaveOccurred())
 	Expect(key).To(BeEquivalentTo(document.Key))
@@ -60,13 +60,13 @@ func UpdateADocument(coll driver.Collection, writer easydb.IWriter) {
 	assertUsers(u, getUserMock2())
 }
 
-func UpdateANonexistentDocument(writer easydb.IWriter) {
+func UpdateANonexistentDocument(writer easydb.Writer) {
 	key, err := writer.Update("nonexistent key", getUserMock())
 	Expect(err).To(HaveOccurred())
 	Expect(key).ToNot(BeEquivalentTo(""))
 }
 
-func RemoveADocument(coll driver.Collection, writer easydb.IWriter) {
+func RemoveADocument(coll driver.Collection, writer easydb.Writer) {
 	document, err := coll.CreateDocument(nil, getUserMock())
 	Expect(err).ToNot(HaveOccurred())
 	err = writer.Delete(document.Key)
@@ -76,7 +76,7 @@ func RemoveADocument(coll driver.Collection, writer easydb.IWriter) {
 	Expect(err).To(HaveOccurred())
 }
 
-func RemoveANonexistentDocument(writer easydb.IWriter) {
+func RemoveANonexistentDocument(writer easydb.Writer) {
 	err := writer.Delete("nonexistent key")
 	Expect(err).To(HaveOccurred())
 }

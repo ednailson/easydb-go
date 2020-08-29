@@ -1,9 +1,5 @@
 package arango
 
-import (
-	"github.com/arangodb/go-driver"
-)
-
 func (t *table) Save(data interface{}) (interface{}, error) {
 	document, err := t.coll.CreateDocument(nil, data)
 	if err != nil {
@@ -26,8 +22,4 @@ func (t *table) Delete(id string) error {
 		return err
 	}
 	return nil
-}
-
-func (t *table) IsConflict(err error) bool {
-	return driver.IsConflict(err)
 }

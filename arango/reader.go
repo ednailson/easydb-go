@@ -47,10 +47,6 @@ func (t *table) Filter(filters []easydb.Filter) ([]interface{}, error) {
 	return iterateCursor(cursor)
 }
 
-func (t *table) IsNotFound(err error) bool {
-	return driver.IsNotFound(err)
-}
-
 func iterateCursor(cursor driver.Cursor) ([]interface{}, error) {
 	var data []interface{}
 	for cursor.HasMore() {

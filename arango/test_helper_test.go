@@ -9,36 +9,36 @@ import (
 	"strconv"
 )
 
-const DBNameTest = "testingDB"
-const CollUserTest = "userTestingCollection"
-const DBPassTest = "dummyPass"
-const DBUserTest = "root"
-const DBPortTest = 8529
-const DBHostTest = "http://arangodb.service.internal.com.br"
+const dbNameTest = "testingDB"
+const collUserTest = "userTestingCollection"
+const dbPassTest = "dummyPass"
+const dbUserTest = "root"
+const dbPortTest = 8529
+const dbHostTest = "http://arangodb.service.internal.com.br"
 
-func MockDBConfig() Config {
+func mockDBConfig() Config {
 	return Config{
-		Host:     DBHostTest,
-		Port:     DBPortTest,
-		User:     DBUserTest,
-		Password: DBPassTest,
-		Database: DBNameTest,
+		Host:     dbHostTest,
+		Port:     dbPortTest,
+		User:     dbUserTest,
+		Password: dbPassTest,
+		Database: dbNameTest,
 		Collections: []Collection{
 			{
-				Name:        CollUserTest,
+				Name:        collUserTest,
 				IndexFields: []string{"username", "email"},
 			},
 		},
 	}
 }
 
-func RemoveDocument(coll driver.Collection, key string) {
+func removeDocument(coll driver.Collection, key string) {
 	_, err := coll.RemoveDocument(nil, key)
 	Expect(err).ToNot(HaveOccurred())
 }
 
-func MockCollection(config Config) driver.Collection {
-	client := MockClient(config)
+func mockCollection(config Config) driver.Collection {
+	client := mockClient(config)
 	db, err := client.Database(nil, config.Database)
 	Expect(err).ToNot(HaveOccurred())
 	coll, err := db.Collection(nil, config.Collections[0].Name)
@@ -48,7 +48,7 @@ func MockCollection(config Config) driver.Collection {
 	return coll
 }
 
-func MockClient(config Config) driver.Client {
+func mockClient(config Config) driver.Client {
 	dbConn, err := http.NewConnection(http.ConnectionConfig{
 		Endpoints: []string{config.Host + ":" + strconv.Itoa(config.Port)},
 		TLSConfig: &tls.Config{},
@@ -61,16 +61,16 @@ func MockClient(config Config) driver.Client {
 	return client
 }
 
-func MockTestingDB() easydb.IDatabase {
+func mockTestingDB() easydb.Database {
 	db, err := NewDatabase(Config{
-		Host:     DBHostTest,
-		Port:     DBPortTest,
-		User:     DBUserTest,
-		Password: DBPassTest,
-		Database: DBNameTest,
+		Host:     dbHostTest,
+		Port:     dbPortTest,
+		User:     dbUserTest,
+		Password: dbPassTest,
+		Database: dbNameTest,
 		Collections: []Collection{
 			{
-				Name:        CollUserTest,
+				Name:        collUserTest,
 				IndexFields: []string{"username", "email"},
 			},
 		},
@@ -79,14 +79,14 @@ func MockTestingDB() easydb.IDatabase {
 	return db
 }
 
-func MockUserTable() easydb.ITable {
-	db := MockTestingDB()
-	table, err := db.Table(CollUserTest)
+func mockUserTable() easydb.Table {
+	db := mockTestingDB()
+	table, err := db.Table(collUserTest)
 	Expect(err).ToNot(HaveOccurred())
 	return table
 }
 
-func TruncateUserCollection(coll driver.Collection) {
+func truncateUserCollection(coll driver.Collection) {
 	err := coll.Truncate(driver.WithWaitForSync(nil))
 	if driver.IsPreconditionFailed(err) {
 		err := coll.Truncate(driver.WithWaitForSync(nil))
